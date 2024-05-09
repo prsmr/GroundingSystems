@@ -31,6 +31,50 @@
 
         <!-- Leaflet map setup script -->
         <script>
+        // Load and add a single GEOJSON-file
+        function loadGeoJSON(filePath) {
+            fetch(filePath)
+                .then(response => response.json())
+                .then(data => {
+
+                    var geojsonLayer = L.geoJSON(data, {
+                        style: function (feature) {
+                            return {
+                                color: 'blue',
+                                weight: 2,
+                                opacity: 0.3
+                            };
+                        }
+                    });
+
+                    // add to map
+                    geojsonLayer.addTo(map);
+                })
+                .catch(error => {
+                    console.error('Error loading GEOJSON file:', error);
+                });
+        }
+
+            // Funktion zum Laden aller GEOJSON-Dateien aus dem angegebenen Ordner
+            function loadAllGeoJSONFiles(folderPath) {
+                // URL Ihrer API, die eine Liste der GEOJSON-Dateien im Ordner zurückgibt
+                const apiUrl = `${folderPath}/geojson.php`; // Passen Sie die URL an
+
+                // Laden der Dateiliste von der API
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(fileList => {
+                        // Laden jeder GEOJSON-Datei in der Liste
+                        fileList.forEach(fileName => {
+                            const filePath = `${folderPath}/${fileName}`;
+                            loadGeoJSON(filePath);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading file list:', error);
+                    });
+            }
+
             var map = L.map('map').setView([52.12, 9.35], 11); // Position and zoom for Hameln-Pyrmont
 
             // Add OpenStreetMap as base-map
@@ -38,29 +82,7 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            function loadGeoJSONFiles() {
-            var folderPath = 'geojson/';
-
-            // get list of files in $folderPath
-            fetch(folderPath)
-                .then(response => response.json()) // process JSON-filelist
-                .then(files => {
-                    files.forEach(file => {
-                        // load GeoJSON-file
-                        fetch(folderPath + file)
-                            .then(response => response.json())
-                            .then(geojsonData => {
-                                // add GeoJSON data to map
-                                L.geoJSON(geojsonData).addTo(map);
-                            });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading GeoJSON-files:', error);
-                });
-                }
-
-            loadGeoJSONFiles();
+        loadAllGeoJSONFiles('geojson');
         </script>
     </div>
 
