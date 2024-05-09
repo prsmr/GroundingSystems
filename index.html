@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
 
     <!-- Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js" integrity="sha512-kZvDMZm6X3v3K9tnGpvQyQdDBgEmsnET9PT/DQ4L1ymY5MmZzFnR9t9/XzdOB+6Y0pmQEeKwK77OXbP6zU+4dQ==" crossorigin=""></script>
@@ -31,65 +31,35 @@
 
         <!-- Leaflet map setup script -->
         <script>
-            // Initialisierung der Leaflet-Karte
-            var map = L.map('map').setView([52.12, 9.35], 11); // Position und Zoomstufe für Hameln-Pyrmont
+            var map = L.map('map').setView([52.12, 9.35], 11); // Position and zoom for Hameln-Pyrmont
 
-            // Hinzufügen von OpenStreetMap als Basiskarten-Layer
+            // Add OpenStreetMap as base-map
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // GeoJSON-Daten für den Landkreis Hameln-Pyrmont
-            // Hier müssen Sie die GeoJSON-Daten des Landkreises Hameln-Pyrmont einfügen. Diese Daten können Sie entweder selbst erstellen oder aus einer Quelle wie OpenStreetMap exportieren.
-         //  var hamelnPyrmontGeoJSON = {
-         //       "type": "Feature",
-         //       "properties": {},
-         //       "geometry": {
-         //           "type": "Polygon",
-         //           "coordinates": [
-         //               [
-         //                   [9.297, 52.013], [9.4, 52.12], [9.45, 52.12], [9.55, 52.08], [9.60, 51.97],
-         //                   [9.48, 51.97], [9.38, 52.00], [9.30, 52.013]
-         //               ]
-         //           ]
-         //       }
-         //   };
-//
-  //          // Hervorheben des Landkreises Hameln-Pyrmont in Blau
-    //        L.geoJSON(hamelnPyrmontGeoJSON, {
-      //          style: function(feature) {
-        //            return {
-          //              color: 'blue',
-            //            weight: 2,
-              //          fillColor: 'blue',
-                //        fillOpacity: 0.3
-                  //  };
-                //}
-            //}).addTo(map);
-
             function loadGeoJSONFiles() {
-            var folderPath = 'geojson/'; // Ordnerpfad
+            var folderPath = 'geojson/';
 
-            // Verwenden Sie `fetch` oder eine Ajax-Bibliothek, um eine Liste der Dateien im Ordner abzurufen
+            // get list of files in $folderPath
             fetch(folderPath)
-                .then(response => response.json()) // Verarbeiten Sie die JSON-Dateiliste
+                .then(response => response.json()) // process JSON-filelist
                 .then(files => {
                     files.forEach(file => {
-                        // Laden Sie die GeoJSON-Datei
+                        // load GeoJSON-file
                         fetch(folderPath + file)
                             .then(response => response.json())
                             .then(geojsonData => {
-                                // Fügen Sie die GeoJSON-Daten der Karte hinzu
+                                // add GeoJSON data to map
                                 L.geoJSON(geojsonData).addTo(map);
                             });
                     });
                 })
                 .catch(error => {
-                    console.error('Fehler beim Laden der GeoJSON-Dateien:', error);
+                    console.error('Error loading GeoJSON-files:', error);
                 });
                 }
 
-            // Rufen Sie die Funktion auf, um die GeoJSON-Dateien zu laden
             loadGeoJSONFiles();
         </script>
     </div>
