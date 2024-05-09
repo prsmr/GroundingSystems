@@ -1,6 +1,6 @@
 <?php
 // GEOJSON-file directory
-$geojsonDir = 'geojson';
+$geojsonDir = './';
 
 // scan directory for files
 $files = scandir($geojsonDir);
