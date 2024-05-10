@@ -2,6 +2,23 @@
 // GEOJSON-file directory
 $geojsonDir = './';
 
+$subdir = $_GET['gs']
+
+switch ($subdir) {
+    case 'tn':
+        $geojsonDir = './tn'
+        break;
+    case 'tt':
+        $geojsonDir = './tt'
+        break;
+    case 'it':
+        $geojsonDir = './it'
+        break;
+    default:
+        $geojsonDir = './tn'
+        break;
+}
+
 // scan directory for files
 $files = scandir($geojsonDir);
 
