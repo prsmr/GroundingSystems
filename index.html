@@ -56,18 +56,34 @@
         }
 
             // Funktion zum Laden aller GEOJSON-Dateien aus dem angegebenen Ordner
-            function loadAllGeoJSONFiles(folderPath) {
-                // URL Ihrer API, die eine Liste der GEOJSON-Dateien im Ordner zurückgibt
-                const apiUrl = `${folderPath}/geojson.php`; // Passen Sie die URL an
+            function loadAllGeoJSONFiles(gs) {
+                const apiUrl = `./geojson/geojson.php?gs=${gs}`;
 
-                // Laden der Dateiliste von der API
+                // load filellist from API
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(fileList => {
                         // Laden jeder GEOJSON-Datei in der Liste
                         fileList.forEach(fileName => {
                             const filePath = `${folderPath}/${fileName}`;
-                            loadGeoJSON(filePath);
+
+                            let color;
+                            switch (gs) {
+                                case 'tn':
+                                    color = 'blue';
+                                    break;
+                                case 'tt':
+                                    color = 'green';
+                                    break;
+                                case 'it':
+                                    color = 'red';
+                                    break;
+                                default:
+                                    color = 'black';
+                                    break;
+                            }             
+                                           
+                            loadGeoJSON(filePath, color);
                         });
                     })
                     .catch(error => {
@@ -82,7 +98,9 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-        loadAllGeoJSONFiles('geojson');
+        loadAllGeoJSONFiles('tn');
+        loadAllGeoJSONFiles('tt');
+        loadAllGeoJSONFiles('tn');
         </script>
     </div>
 
