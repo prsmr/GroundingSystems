@@ -91,6 +91,19 @@
                     });
             }
 
+            function onLocationFound(e) {
+                var radius = e.accuracy;
+
+                L.marker(e.latlng).addTo(map)
+                    .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+                L.circle(e.latlng, radius).addTo(map);
+            }
+
+            function onLocationError(e) {
+                alert(e.message);
+            }            
+
             var map = L.map('map').setView([52.12, 9.35], 11); // Position and zoom for Hameln-Pyrmont
 
             // Add OpenStreetMap as base-map
@@ -98,9 +111,13 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-        loadAllGeoJSONFiles('tn');
-        loadAllGeoJSONFiles('tt');
-        loadAllGeoJSONFiles('it');
+            map.locate({setView: true, maxZoom: 16});
+            map.on('locationfound', onLocationFound);
+            map.on('locationerror', onLocationError);
+
+            loadAllGeoJSONFiles('tn');
+            loadAllGeoJSONFiles('tt');
+            loadAllGeoJSONFiles('it');
         </script>
     </div>
 
