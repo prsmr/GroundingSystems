@@ -1,72 +1,46 @@
-        // Load and add a single GEOJSON-file
-        function loadGeoJSON(filePath, col) {
-            fetch(filePath)
-                .then(response => response.json())
-                .then(data => {
-
-                    var geojsonLayer = L.geoJSON(data, {
-                        style: function (feature) {
-                            return {
-                                color: col,
-                                weight: 2,
-                                opacity: 0.3
-                            };
-                        }
-                    });
-
-                    // add to map
-                    geojsonLayer.addTo(map);
-                })
-                .catch(error => {
-                    console.error('Error loading GEOJSON file:', error);
-                });
+        function getColor(gs) {
+            return gs == "TN" ? '#2b8cbe' :
+                   gs == "IT" ? '#beaed4' :
+                   gs == "TT" ? '#fdc086' :
+                               '#000000';
         }
 
-            // Funktion zum Laden aller GEOJSON-Dateien aus dem angegebenen Ordner
-            function loadAllGeoJSONFiles(gs) {
-                const apiUrl = `./geojson/geojson.php?gs=${gs}`;
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.system),
+                weight: 2,
+                opacity: 1,
+                color: getColor(feature.properties.system),
+                fillOpacity: 0.3
+            };
+        }
 
-                // load filellist from API
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(fileList => {
-                        // Laden jeder GEOJSON-Datei in der Liste
-                        fileList.forEach(fileName => {
-                            const filePath = `./geojson/${gs}/${fileName}`;
+        function onLocationFound(e) {
+            var radius = e.accuracy;
 
-                            let color;
-                            switch (gs) {
-                                case 'tn':
-                                    color = 'blue';
-                                    break;
-                                case 'tt':
-                                    color = 'green';
-                                    break;
-                                case 'it':
-                                    color = 'red';
-                                    break;
-                                default:
-                                    color = 'black';
-                                    break;
-                            }             
+            L.marker(e.latlng).addTo(map)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
-                            loadGeoJSON(filePath, color);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error loading file list:', error);
-                    });
-            }
+            L.circle(e.latlng, radius).addTo(map);
+        }
 
-            function onLocationFound(e) {
-                var radius = e.accuracy;
+        function onLocationError(e) {
+            alert(e.message);
+        }            
 
-                L.marker(e.latlng).addTo(map)
-                    .bindPopup("You are within " + radius + " meters from this point").openPopup();
+        function highlightFeature(e) {
+            var layer = e.target;
 
-                L.circle(e.latlng, radius).addTo(map);
-            }
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
 
-            function onLocationError(e) {
-                alert(e.message);
-            }            
+            layer.bringToFront();
+        }
+
+        function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+        }

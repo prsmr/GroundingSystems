@@ -29,43 +29,22 @@
     <!-- Leaflet map -->
     <div id="map">
         <script src="./js/scripts.js"></script>
+        <script src="./geojson/de.js"></script> <!-- GEOJSON data for Germany -->       
+
         <!-- Leaflet map setup script -->
         <script>
 
             var map = L.map('map');
-            map.createPane('labels');
-            map.getPane('labels').style.zIndex = 650;
-            map.getPane('labels').style.pointerEvents = 'none';
 
-            var positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
-            attribution: '©OpenStreetMap, ©CartoDB'
+            var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
-
-            var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-            attribution: '©OpenStreetMap, ©CartoDB',
-            pane: 'labels'
-            }).addTo(map);
-
-            var geojson = L.geoJson(GeoJsonData, geoJsonOptions).addTo(map);
-
-            geojson.eachLayer(function (layer) {
-            layer.bindPopup(layer.feature.properties.name);
-            });
-
-            map.fitBounds(geojson.getBounds());
-
-            // Add OpenStreetMap as base-map
-            //L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
-            //    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            //}).addTo(map);
 
             map.locate({setView: true, maxZoom: 16});
             map.on('locationfound', onLocationFound);
             map.on('locationerror', onLocationError);
 
-            loadAllGeoJSONFiles('tn');
-            loadAllGeoJSONFiles('tt');
-            loadAllGeoJSONFiles('it');
+            L.geoJson(de_grid, {style: style}).addTo(map);
         </script>
     </div>
 
