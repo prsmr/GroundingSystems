@@ -28,6 +28,8 @@
             alert(e.message);
         }            
 
+        var geojson;
+
         function highlightFeature(e) {
             var layer = e.target;
 
@@ -39,8 +41,18 @@
             });
 
             layer.bringToFront();
+            info.update(layer.feature.properties);
         }
 
         function resetHighlight(e) {
             geojson.resetStyle(e.target);
+            info.update();
         }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+            });
+        }
+
