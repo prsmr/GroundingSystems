@@ -35,6 +35,11 @@ footer {
     height: calc(100vh - 100px); /* Adjust height to account for header and footer */
 }
 
+#container {
+    width: 100vw;
+    height: calc(100vh - 100px); /* Adjust height to account for header and footer */
+}
+
 /* Link styling */
 header a, footer a {
     color: #fff; /* Set link color to black */
@@ -45,12 +50,12 @@ header a:hover, footer a:hover {
     text-decoration: none; /* No Underline links on hover */
 }
 
-#map a {
+#container a {
     color: #fff; /* Set link color to black */
     text-decoration: underline; /* underline by default */
 }
 
-#map a:hover {
+#container a:hover {
     color: #fff; /* Set link color to black */
     text-decoration: none; /* underline by default */
 }
